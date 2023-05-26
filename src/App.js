@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import Form from './Form.js';
+import List from './List.js'
+import { useDispatch, useSelector } from "react-redux";
+import {create, edit, remove, update} from "./redux/actions";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const list = useSelector((state) => state.list)
+    const userEdit = useSelector((state) => state.userEdit)
+    const dispatch = useDispatch()
+
+    function onFormSubmit(user) {
+        if(user.id){
+            dispatch(update(user))
+        } else {
+            dispatch(create(user))
+        }
+    }
+
+    function onUserListRemove(id) {
+        dispatch(remove(id))
+    }
+
+    function onUserListEdit(user) {
+        dispatch(edit(user))
+    }
+
+    return (
+      <div>
+        <Form
+            userEdit={userEdit}
+            onFormSubmit={onFormSubmit}
+        />
+        <List
+            list = {list}
+            onUserListRemove={onUserListRemove}
+            onUserListEdit={onUserListEdit}
+        />
+      </div>
+    );
 }
 
 export default App;
